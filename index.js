@@ -26,9 +26,7 @@ const dbURI = 'mongodb+srv://zafftdietrich:XkvOczlIS1pODwyv@cluster0.qi1fijc.mon
 
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true, dbName: 'test'})
     .then( (req, res) =>{
-        app.listen(PORT, ()=>{
-            console.log('We good boys')
-        })
+        console.log('connected to Mongo')
     })
     .catch((err)=>{
         console.log(err)
@@ -116,3 +114,9 @@ app.post('/login', (req, res) =>{
 
 app.use('/users', usersRouter);
 app.use('/pets', petsRouter);
+
+app.listen(PORT, ()=>{
+    console.log('We good boys')
+})
+
+module.exports = app
