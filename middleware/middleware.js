@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Pets = require('../models/pet');
+
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -69,7 +71,40 @@ function generateRandomId(req, res, next) {
 } 
 
 
+async function checkAvailability(req, res, next){
+  const { petId } = req.params;
+  try{
+    const pet = await Pets.findOne({id: `${petId}`});
+    if (pet.adoptionStatus !== 'Available'){
+      return res.status(404).send({message: 'Pet not available!', pet})
+    }
+    else{
+      next()
+      return
+    }
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).send(err)
+  }
+}
 
-module.exports = { verifyJWT, upload, generateRandomId}
+async function isSavedTwice(req, res, next){
+  const {petId} = req.params;
+  const email = `${req.decodedToken.email}`;
+  try{
+    const user = await User.findOne({email: email});
+    if (user.savedPets.includes(petId)){
+      return res.status(404).send({message: "Pet already saved"})
+    }
+    next()
+    return
+  }
+  catch (err){
+    return res.status(500).send(err);
+  }
+}
+
+module.exports = { verifyJWT, upload, generateRandomId, checkAvailability, isSavedTwice}
 
 

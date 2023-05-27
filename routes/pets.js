@@ -1,6 +1,6 @@
 const petsRouter = require('express').Router();
 
-const { verifyJWT, upload, generateRandomId } = require('../middleware/middleware');
+const { verifyJWT, upload, isSavedTwice, generateRandomId, checkAvailability } = require('../middleware/middleware');
 
 const { userAddAdopt } = require('../middleware/adoptMiddleware');
 const { userSubtractAdopt } = require('../middleware/adoptMiddleware');
@@ -23,6 +23,7 @@ petsRouter.get('/', (req, res) => {
     console.log('pet search', req.query)
 
     const searchParams = req.query;
+    console.log(searchParams)
 
     Pets.find({
         weight: { $lte: searchParams.weightmax, $gte: searchParams.weightmin },
@@ -45,7 +46,28 @@ petsRouter.get('/', (req, res) => {
         })
 })
 
-petsRouter.put('/adopt/:petId', verifyJWT, userAddAdopt, async (req, res) => {
+petsRouter.get('/availablepets', (req, res) => {
+
+    const searchParams = req.query;
+    console.log(searchParams)
+
+    Pets.find({adoptionStatus: searchParams.adoptionStatus })
+        .then(pet => {
+            console.log('.then')
+            if (pet) {
+                console.log('');
+                const listLength = pet.length -4;
+                return res.status(200).send({message: "Success", pet, listLength})
+            }
+            return res.status(404).send('Error!')
+        }).catch(() => {
+
+            res.send("Error")
+
+        })
+})
+
+petsRouter.put('/adopt/:petId', checkAvailability, verifyJWT, userAddAdopt, async (req, res) => {
     const { petId } = req.params;
     const user = req.user
     console.log(petId)
@@ -86,7 +108,7 @@ petsRouter.put('/return/:petId', verifyJWT, userSubtractAdopt, async (req, res) 
 
 });
 
-petsRouter.put('/foster/:petId', verifyJWT, userAddFoster, async (req, res) => {
+petsRouter.put('/foster/:petId', checkAvailability, verifyJWT, userAddFoster, async (req, res) => {
     const { petId } = req.params;
     console.log(petId);
     console.log('oooo');
@@ -128,7 +150,7 @@ petsRouter.put('/unfoster/:petId', verifyJWT, userSubtractFoster, async (req, re
     }
 });
 
-petsRouter.put('/save/:petId', verifyJWT, userAddSave, async (req, res) => {
+petsRouter.put('/save/:petId', verifyJWT, isSavedTwice, userAddSave, async (req, res) => {
     const user = req.user
     res.status(200).send({ message: "Success!", user })
 })

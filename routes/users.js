@@ -199,4 +199,70 @@ userRouter.put('/update/:oldEmail', verifyJWT, async (req, res)=>{
     }
 })
 
+userRouter.get('/mostsavedpets/:oo', async (req, res) =>{
+    const {oo} = req.params;
+    console.log('jjajajjaajajjajaajjaaj')
+    try{
+        const savedPetsList =[];
+        const searchKey = 'savedPets';
+        const users = await User.find({});
+        console.log(users)
+        for (let i = 0; i < users.length; i++){
+            for (let key in users[i]){
+                if (key === searchKey){
+                    console.log(users[i][key])
+                    for (let j = 0; j < users[i][key].length; j++){
+                        savedPetsList.push(users[i][key][j]);
+                    }
+                }
+            }
+        }
+        console.log(savedPetsList)
+
+        function sortByFrequency(arr) {
+            const frequency = {};
+            
+            
+            for (let item of arr) {
+              frequency[item] = (frequency[item] || 0) + 1;
+            }
+            
+            
+            arr.sort((a, b) => frequency[b] - frequency[a]);
+            
+            return arr;
+          }
+          
+          const sortedArray = sortByFrequency(savedPetsList);
+          
+          console.log(sortedArray);
+
+          if (sortedArray.length > 7) {
+            sortedArray.splice(7);
+          }
+
+        try{
+        const petList = [];
+        for (let z = 0; z < sortedArray.length; z++){
+            let adoptedPet = await Pets.findOne({id: sortedArray[z]});
+            petList.push(adoptedPet)
+        }
+        
+        console.log(petList)
+        res.status(200).send({message: "Success", petList})
+
+        }
+        catch(err){
+            console.log(err)
+            res.status(404).send('Pet list not created')
+        }    
+
+    }
+    catch(err){
+        console.log(err);
+    }
+})
+
+
+
 module.exports = userRouter;
