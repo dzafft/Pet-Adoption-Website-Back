@@ -233,4 +233,18 @@ petsRouter.post('/addpet', verifyJWT, upload.single('image'), generateRandomId, 
     return res.status(200).send({message: 'Success', pet})
 });
 
+petsRouter.get('/petcard/:id', async (req, res)=>{
+    const {id} = req.params;
+    console.log(id)
+    try{
+        const pet = await Pets.findOne({id: id});
+        console.log(pet);
+        return res.status(200).send({message: 'Success!', pet})
+    }
+    catch(err){
+        res.status(500).send(err)
+        console.log(err);
+    }
+})
+
 module.exports = petsRouter;

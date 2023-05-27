@@ -261,8 +261,32 @@ userRouter.get('/mostsavedpets/:oo', async (req, res) =>{
     catch(err){
         console.log(err);
     }
+
+    
 })
 
+userRouter.get('/status/:email/:id', async (req, res)=>{
+    console.log(';;;;;;')
+    const email = req.params.email;
+    const id = req.params.id;
+    console.log('smetlnv;ksjnvkj')
+
+    try{
+        let isTrue = false;
+        const user = await User.findOne({email: email});
+        console.log(user)
+        if (user.adoptedPets.includes(id) || user.fosteredPets.includes(id) || user.savedPets.includes(id)){
+            isTrue = true;
+            return res.status(200).send({message: "Success!", isTrue})
+        }
+        return res.status(200).send({message: "Success!", isTrue})
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+
+})
 
 
 module.exports = userRouter;
