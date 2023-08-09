@@ -21,7 +21,7 @@ app.use(bodyParser.json(), urlencodedParser);
 const path = require('path');
 
 app.use('/update', express.static(path.join(__dirname, 'uploads')));
-const dbURI = 'mongodb+srv://zafftdietrich:XkvOczlIS1pODwyv@cluster0.qi1fijc.mongodb.net/?retryWrites=true&w=majority';
+const dbURI = process.env.DBURI;
 
 
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true, dbName: 'test'})
