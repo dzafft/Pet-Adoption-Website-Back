@@ -10,12 +10,12 @@ const usersRouter = require('./routes/users');
 require('dotenv').config()
 const PORT = process.env.PORT || 8080;
 const JWT_SECRET = process.env.JWT_SECRET;
-
+const VERCEL_FRONT_END_API = process.env.VERCEL_FRONT_END_API;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('./models/user')
 
-app.use(cors({origin: 'http://localhost:3000', credentials: true}));
+app.use(cors({origin: VERCEL_FRONT_END_API || 'http://localhost:3000', credentials: true}));
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 app.use(bodyParser.json(), urlencodedParser);
 const path = require('path');
