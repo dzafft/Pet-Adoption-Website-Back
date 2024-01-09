@@ -15,7 +15,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('./models/user')
 
-app.use(cors({origin: VERCEL_FRONT_END_API || 'http://localhost:3000', credentials: true}));
+app.use(cors({origin: VERCEL_FRONT_END_API, credentials: true}));
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 app.use(bodyParser.json(), urlencodedParser);
 const path = require('path');
