@@ -16,7 +16,7 @@ const bcrypt = require('bcrypt');
 const User = require('./models/user')
 
 app.use(cors({
-    origin: ["http://localhost:3000", "https://pet-adoption-website-front-rho.vercel.app"],
+    origin: ["http://localhost:3000", VERCEL_FRONT_END_API],
     credentials: true
 }));
 const urlencodedParser = bodyParser.urlencoded({extended: false})
