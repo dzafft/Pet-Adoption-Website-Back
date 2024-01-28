@@ -21,6 +21,8 @@ app.use(cors({
     origin: ["*"],
     credentials: true
 }));
+
+
 const urlencodedParser = bodyParser.urlencoded({extended: false})
 app.use(bodyParser.json(), urlencodedParser);
 const path = require('path');
