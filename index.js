@@ -17,7 +17,7 @@ const User = require('./models/user')
 
 console.log(VERCEL_FRONT_END_API)
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: VERCEL_FRONT_END_API }));
 
 
 const urlencodedParser = bodyParser.urlencoded({extended: false})
